@@ -3,6 +3,7 @@
 
 #define FIXMATH_NO_ROUNDING
 #define FIXMATH_NO_OVERFLOW
+#define FIXMATH_FAST_SIN
 
 #ifdef __cplusplus
 extern "C"
