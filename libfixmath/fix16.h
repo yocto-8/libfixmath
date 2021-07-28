@@ -3,7 +3,7 @@
 
 #define FIXMATH_NO_ROUNDING
 #define FIXMATH_NO_OVERFLOW
-#define FIXMATH_FAST_SIN
+//#define FIXMATH_SIN_LUT
 #define FIXMATH_NO_CACHE
 
 #ifdef __cplusplus
