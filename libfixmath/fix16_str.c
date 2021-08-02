@@ -37,8 +37,10 @@ static char *itoa_loop(char *buf, uint32_t scale, uint32_t value, bool skip)
     return buf;
 }
 
-void fix16_to_str(fix16_t value, char *buf, int decimals)
+int fix16_to_str(fix16_t value, char *buf, int decimals)
 {
+    char *const beg = buf;
+
     uint32_t uvalue = (value >= 0) ? value : -value;
     if (value < 0)
         *buf++ = '-';
@@ -67,6 +69,8 @@ void fix16_to_str(fix16_t value, char *buf, int decimals)
     }
     
     *buf = '\0';
+
+    return buf - beg;
 }
 
 fix16_t fix16_from_str(const char *buf)
