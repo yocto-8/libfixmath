@@ -70,6 +70,22 @@ int fix16_to_str(fix16_t value, char *buf, int decimals)
     
     *buf = '\0';
 
+    /* yocto-8 HACK: walk back n 0 digits */
+    if (scale != 1)
+    {
+        while (*(buf - 1) == '0')
+        {
+            --buf;
+            *buf = '\0';
+        }
+
+        if (*(buf - 1) == '.')
+        {
+            --buf;
+            *buf = '\0';
+        }
+    }
+
     return buf - beg;
 }
 
