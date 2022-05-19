@@ -5,6 +5,7 @@
 #define FIXMATH_NO_OVERFLOW
 //#define FIXMATH_SIN_LUT
 #define FIXMATH_NO_CACHE
+#define FIXMATH_NO_64BIT
 
 #ifdef __cplusplus
 extern "C"
