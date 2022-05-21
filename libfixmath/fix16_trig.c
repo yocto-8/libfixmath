@@ -46,28 +46,28 @@ fix16_t fix16_sin_parabola(fix16_t inAngle)
 
 fix16_t fix16_sin(fix16_t inAngle)
 {
-	fix16_t tempAngle = inAngle % (fix16_pi << 1);
+	fix16_t tempAngle = inAngle % TWO_PI;
 
 	#ifdef FIXMATH_SIN_LUT
 	if(tempAngle < 0)
-		tempAngle += (fix16_pi << 1);
+		tempAngle += TWO_PI;
 
 	fix16_t tempOut;
 	if(tempAngle >= fix16_pi) {
 		tempAngle -= fix16_pi;
-		if(tempAngle >= (fix16_pi >> 1))
+		if(tempAngle >= (PI_DIV_2))
 			tempAngle = fix16_pi - tempAngle;
 		tempOut = -(tempAngle >= _fix16_sin_lut_count ? fix16_one : _fix16_sin_lut[tempAngle]);
 	} else {
-		if(tempAngle >= (fix16_pi >> 1))
+		if(tempAngle >= (PI_DIV_2))
 			tempAngle = fix16_pi - tempAngle;
 		tempOut = (tempAngle >= _fix16_sin_lut_count ? fix16_one : _fix16_sin_lut[tempAngle]);
 	}
 	#else
 	if(tempAngle > fix16_pi)
-		tempAngle -= (fix16_pi << 1);
+		tempAngle -= TWO_PI;
 	else if(tempAngle < -fix16_pi)
-		tempAngle += (fix16_pi << 1);
+		tempAngle += TWO_PI;
 
 	#ifndef FIXMATH_NO_CACHE
 	fix16_t tempIndex = ((inAngle >> 5) & 0x00000FFF);

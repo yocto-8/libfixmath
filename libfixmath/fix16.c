@@ -133,7 +133,7 @@ fix16_t fix16_mul(fix16_t inArg0, fix16_t inArg1)
 	int32_t product_hi = AC + (AD_CB >> 16);
 	
 	// Handle carry from lower 32 bits to upper part of result.
-	uint32_t ad_cb_temp = AD_CB << 16;
+	uint32_t ad_cb_temp = (uint32_t)(AD_CB) << 16;
 	uint32_t product_lo = BD + ad_cb_temp;
 	if (product_lo < BD)
 		product_hi++;
