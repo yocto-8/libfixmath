@@ -1,4 +1,4 @@
-#include <cmath>
+#include <math.h>
 #include <limits.h>
 #include "fix16.h"
 
