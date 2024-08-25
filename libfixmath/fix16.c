@@ -295,7 +295,7 @@ fix16_t fix16_div(fix16_t a, fix16_t b)
 	// computed all the bits in (a<<17)/b. Usually this takes 1-3 iterations.
 	
 	if (b == 0)
-			return fix16_minimum;
+			return a < 0 ? fix16_minimum : fix16_maximum; // originally minimum in libfixmath but opposite sign of x in p8
 	
     uint32_t remainder = fix_abs(a);
     uint32_t divider = fix_abs(b);
@@ -477,7 +477,9 @@ fix16_t fix16_mod(fix16_t x, fix16_t y)
 		/* Note that in C90, the sign of result of the modulo operation is
 		 * undefined. in C99, it's the same as the dividend (aka numerator).
 		 */
-		x %= y;
+		// NOTE: yocto-8: this is the PICO-8 version of %, esp wrt negative handling
+		const auto r = y != 0 ? (x % y) : x;
+		return r < 0 ? (r + fix16_abs(y)) : r;
 	#endif
 
 	return x;
