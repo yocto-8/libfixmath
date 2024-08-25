@@ -1,3 +1,4 @@
+#include <cmath>
 #include <limits.h>
 #include "fix16.h"
 
@@ -46,6 +47,9 @@ fix16_t fix16_sin_parabola(fix16_t inAngle)
 
 fix16_t fix16_sin(fix16_t inAngle)
 {
+	#ifdef FIXMATH_USE_FP_TRIG
+	return fix16_from_float(std::sin(fix16_to_float(inAngle)));
+	#else
 	fix16_t tempAngle = inAngle % TWO_PI;
 
 	#ifdef FIXMATH_SIN_LUT
@@ -104,11 +108,16 @@ fix16_t fix16_sin(fix16_t inAngle)
 	#endif
 
 	return tempOut;
+	#endif
 }
 
 fix16_t fix16_cos(fix16_t inAngle)
 {
+#ifdef FIXMATH_USE_FP_TRIG
+	return fix16_from_float(std::cos(fix16_to_float(inAngle)));
+#else
 	return fix16_sin(inAngle + (fix16_pi >> 1));
+#endif
 }
 
 fix16_t fix16_tan(fix16_t inAngle)

@@ -3,10 +3,14 @@
 
 //#define FIXMATH_NO_ROUNDING
 #define FIXMATH_NO_OVERFLOW
-//#define FIXMATH_SIN_LUT
+// #define FIXMATH_SIN_LUT
 #define FIXMATH_NO_CACHE
 #define FIXMATH_NO_64BIT
 //#define FIXMATH_FAST_SIN
+
+// yocto-8: use std float trigonometry; for debugging accuracy or for ports where float is faster
+// this isn't covering 100% of the ops
+// #define FIXMATH_USE_FP_TRIG
 
 #ifdef __cplusplus
 extern "C"
