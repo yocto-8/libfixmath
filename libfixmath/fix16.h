@@ -1,7 +1,7 @@
 #ifndef __libfixmath_fix16_h__
 #define __libfixmath_fix16_h__
 
-//#define FIXMATH_NO_ROUNDING
+#define FIXMATH_NO_ROUNDING
 #define FIXMATH_NO_OVERFLOW
 // #define FIXMATH_SIN_LUT
 #define FIXMATH_NO_CACHE
