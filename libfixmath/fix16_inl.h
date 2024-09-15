@@ -95,14 +95,9 @@ inline fix16_t fix16_mul(fix16_t inArg0, fix16_t inArg1)
 		#endif
 	}
 	
-	#ifdef FIXMATH_NO_ROUNDING
-	return product >> 16;
-	#else
-	fix16_t result = product >> 16;
-	result += (product & 0x8000) >> 15;
+	fix16_t result = fix16_t((product + 0x8000) >> 16);
 	
 	return result;
-	#endif
 }
 #endif
 
@@ -288,6 +283,7 @@ inline uint8_t clz(uint32_t x)
 }
 #endif
 
+#if defined(FIXMATH_NO_64BIT)
 inline fix16_t fix16_div(fix16_t a, fix16_t b)
 {
 	// This uses a hardware 32/32 bit division multiple times, until we have
@@ -360,6 +356,18 @@ inline fix16_t fix16_div(fix16_t a, fix16_t b)
 	
 	return result;
 }
+#else
+inline fix16_t fix16_div(fix16_t a, fix16_t b)
+{
+	if (b == 0)
+		return a < 0 ? fix16_minimum : fix16_maximum; // originally minimum in libfixmath but opposite sign of x in p8
+
+    // ((a * 16) * 16) / (b * 16) gives a final mul factor of 16 (as desired)
+    const int64_t shifted_a = (((int64_t)a) << 16);
+    return fix16_t(shifted_a / b);
+}
+#endif
+
 #endif
 
 /* Alternative 32-bit implementation of fix16_div. Fastest on e.g. Atmel AVR.
