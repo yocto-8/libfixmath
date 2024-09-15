@@ -347,6 +347,7 @@ constexpr uint32_t fix_abs(fix16_t in)
 #ifdef __cplusplus
 }
 #include "fix16.hpp"
+#include "fix16_inl.h"
 #endif
 
 #endif
