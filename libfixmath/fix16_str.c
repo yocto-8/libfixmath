@@ -126,8 +126,7 @@ fix16_t strtofix16(const char *buf, char **end)
         
         uint32_t fracpart = 0;
         uint32_t scale = 1;
-        while (isdigit(*buf) && scale < 100000)
-        {
+        while (isdigit(*buf) && scale < 100000) {
             scale *= 10;
             fracpart *= 10;
             fracpart += *buf++ - '0';
@@ -136,12 +135,7 @@ fix16_t strtofix16(const char *buf, char **end)
         value += fix16_div(fracpart, scale);
     }
     
-    /* Verify that there is no garbage left over */
-    while (*buf != '\0')
-    {
-        if (!isdigit(*buf) && !isspace(*buf))
-            return fix16_overflow;
-        
+    while (*buf != '\0' && isdigit(*buf)) {
         buf++;
     }
 
