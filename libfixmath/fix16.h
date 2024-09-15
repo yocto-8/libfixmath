@@ -236,9 +236,13 @@ extern fix16_t fix16_slog2(fix16_t x) FIXMATH_FUNC_ATTRS;
  */
 extern int fix16_to_str(fix16_t value, char *buf, int decimals);
 
+/*! fix16_from_str but mimicks the API of C strtod */
+extern fix16_t strtofix16(const char* buf, char ** end);
+
 /*! Convert string to a fix16_t value
- * Ignores spaces at beginning and end. Returns fix16_overflow if
- * value is too large or there were garbage characters.
+ * Ignores spaces at beginning and end. Mimicks p8 parsing semantics; namely,
+ * overflow does not result in fix16_overflow being returned.
+ * Garbage characters result in a failed assertion (if enabled).
  */
 extern fix16_t fix16_from_str(const char *buf);
 

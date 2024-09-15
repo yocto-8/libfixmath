@@ -89,7 +89,7 @@ int fix16_to_str(fix16_t value, char *buf, int decimals)
     return buf - beg;
 }
 
-fix16_t fix16_from_str(const char *buf)
+fix16_t strtofix16(const char *buf, char **end)
 {
     while (isspace(*buf))
         buf++;
@@ -108,10 +108,14 @@ fix16_t fix16_from_str(const char *buf)
         intpart += *buf++ - '0';
         count++;
     }
+
+    if (end != nullptr) {
+        *end = const_cast<char*>(buf);
+    }
     
-    if (count == 0 || count > 5
-        || intpart > 32768 || (!negative && intpart > 32767))
-        return fix16_overflow;
+    // if (count == 0 || count > 5
+    //     || intpart > 32768 || (!negative && intpart > 32767))
+    //     return fix16_overflow;
     
     fix16_t value = intpart << 16;
     
@@ -140,7 +144,15 @@ fix16_t fix16_from_str(const char *buf)
         
         buf++;
     }
+
+    if (end != nullptr) {
+        *end = const_cast<char*>(buf);
+    }
     
     return negative ? -value : value;
 }
 
+fix16_t fix16_to_str(const char* buf)
+{
+    return strtofix16(buf, nullptr);
+}
