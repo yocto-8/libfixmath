@@ -23,9 +23,9 @@ extern "C"
 #ifndef FIXMATH_FUNC_ATTRS
 # ifdef __GNUC__
 #   if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 6)
-#     define FIXMATH_FUNC_ATTRS __attribute__((leaf, nothrow, const))
+#     define FIXMATH_FUNC_ATTRS __attribute__((leaf, const))
 #   else
-#     define FIXMATH_FUNC_ATTRS __attribute__((nothrow, const))
+#     define FIXMATH_FUNC_ATTRS __attribute__((const))
 #   endif
 # else
 #   define FIXMATH_FUNC_ATTRS
