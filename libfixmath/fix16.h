@@ -118,8 +118,16 @@ constexpr fix16_t fix16_clamp(fix16_t x, fix16_t lo, fix16_t hi)
 /* Subtraction and addition with (optional) overflow detection. */
 #ifdef FIXMATH_NO_OVERFLOW
 
-constexpr fix16_t fix16_add(fix16_t inArg0, fix16_t inArg1) { return (inArg0 + inArg1); }
-constexpr fix16_t fix16_sub(fix16_t inArg0, fix16_t inArg1) { return (inArg0 - inArg1); }
+constexpr fix16_t fix16_add(fix16_t inArg0, fix16_t inArg1) {
+    fix16_t ret;
+    __builtin_add_overflow(inArg0, inArg1, &ret);
+    return ret;
+}
+constexpr fix16_t fix16_sub(fix16_t inArg0, fix16_t inArg1) {
+    fix16_t ret;
+    __builtin_sub_overflow(inArg0, inArg1, &ret);
+    return ret;
+}
 
 #else
 
