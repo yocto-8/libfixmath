@@ -485,7 +485,7 @@ inline fix16_t fix16_mod(fix16_t x, fix16_t y)
 		 * undefined. in C99, it's the same as the dividend (aka numerator).
 		 */
 		// NOTE: yocto-8: this is the PICO-8 version of %, esp wrt negative handling
-		const auto r = y != 0 ? (x % y) : x;
+		const auto r = y != 0 ? (x % y) : 0;
 		return r < 0 ? (r + fix16_abs(y)) : r;
 	#endif
 
