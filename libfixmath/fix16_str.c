@@ -100,25 +100,24 @@ fix16_t strtofix16(const char *buf, char **end)
         buf++;
 
     /* Decode the integer part */
-    uint32_t intpart = 0;
     int count = 0;
+    uint32_t intpart = 0;
     while (isdigit(*buf))
     {
         intpart *= 10;
         intpart += *buf++ - '0';
-        count++;
+        ++count;
     }
 
-    if (end != nullptr) {
-        *end = const_cast<char*>(buf);
+    if (count == 0) {
+        if (end != nullptr) {
+            *end = const_cast<char*>(buf);
+        }
+        return 0;
     }
     
-    // if (count == 0 || count > 5
-    //     || intpart > 32768 || (!negative && intpart > 32767))
-    //     return fix16_overflow;
-    
     fix16_t value = intpart << 16;
-    
+
     /* Decode the decimal part */
     if (*buf == '.')
     {
