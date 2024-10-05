@@ -245,7 +245,7 @@ extern fix16_t fix16_slog2(fix16_t x) FIXMATH_FUNC_ATTRS;
 extern int fix16_to_str(fix16_t value, char *buf, int decimals);
 
 /*! fix16_from_str but mimicks the API of C strtod */
-extern fix16_t strtofix16(const char* buf, char ** end);
+extern fix16_t strtofix16(const char* buf, char ** end, int parse_mask);
 
 /*! Convert string to a fix16_t value
  * Ignores spaces at beginning and end. Mimicks p8 parsing semantics; namely,

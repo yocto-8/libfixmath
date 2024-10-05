@@ -1,5 +1,6 @@
 #include "fix16.h"
 #include <stdbool.h>
+#include <lobject.h>
 #ifndef FIXMATH_NO_CTYPE
 #include <ctype.h>
 #else
@@ -89,8 +90,12 @@ int fix16_to_str(fix16_t value, char *buf, int decimals)
     return buf - beg;
 }
 
-fix16_t strtofix16(const char *buf, char **end)
+fix16_t strtofix16(const char *buf, char **end, int parse_mask)
 {
+    // parse as 32:32 fixed point for this logic to preserve precision when
+    // doing stuff like scientific notation
+    // downconvert to 16:16 at the end
+
     while (isspace(*buf))
         buf++;
     
@@ -116,22 +121,49 @@ fix16_t strtofix16(const char *buf, char **end)
         return 0;
     }
     
-    fix16_t value = intpart << 16;
+    uint64_t value = uint64_t(intpart) << 32;
 
     /* Decode the decimal part */
     if (*buf == '.')
     {
         buf++;
         
-        uint32_t fracpart = 0;
-        uint32_t scale = 1;
-        while (isdigit(*buf) && scale < 100000) {
+        uint64_t fracpart = 0;
+        uint64_t scale = 1;
+        while (isdigit(*buf) && scale < 100000000) {
             scale *= 10;
             fracpart *= 10;
             fracpart += *buf++ - '0';
         }
-        
-        value += fix16_div(fracpart, scale);
+        value += (uint64_t(fracpart) << 32) / scale;
+    }
+
+    if ((parse_mask & LPARSE_ALLOW_EXPONENT) != 0 && *buf == 'e') {
+        buf++;
+        bool negative_exponent = (*buf == '-');
+        if (*buf == '+' || *buf == '-') {
+            buf++;
+        }
+
+        int exponent = 0;
+        while (isdigit(*buf)) {
+            exponent *= 10;
+            exponent += *buf++ - '0';
+        }
+
+        exponent = negative_exponent ? -exponent : exponent;
+
+        // override value if an exponent is known
+        if (exponent > 0) {
+            for (int i = 0; i < exponent; ++i) {
+                value *= 10;
+            }
+        }
+        else if (exponent < 0) {
+            for (int i = 0; i < exponent; ++i) {
+                value /= 10;
+            }
+        }
     }
 
     // keep parsing extra unnecessary precision digits
@@ -143,11 +175,17 @@ fix16_t strtofix16(const char *buf, char **end)
     if (end != nullptr) {
         *end = const_cast<char*>(buf);
     }
-    
-    return negative ? -value : value;
+
+    value >>= 16;
+
+    if ((parse_mask & LPARSE_SHIFT) != 0) {
+        value >>= 16;
+    }
+
+    return negative ? -fix16_t(value) : fix16_t(value);
 }
 
 fix16_t fix16_to_str(const char* buf)
 {
-    return strtofix16(buf, nullptr);
+    return strtofix16(buf, nullptr, 0);
 }
