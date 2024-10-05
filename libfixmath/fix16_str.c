@@ -120,7 +120,7 @@ fix16_t strtofix16(const char *buf, char **end)
     fix16_t value = intpart << 16;
     
     /* Decode the decimal part */
-    if (*buf == '.' || *buf == ',')
+    if (*buf == '.')
     {
         buf++;
         
@@ -134,7 +134,9 @@ fix16_t strtofix16(const char *buf, char **end)
         
         value += fix16_div(fracpart, scale);
     }
-    
+
+    // keep parsing extra unnecessary precision digits
+    // stop whenever anything else is encountered
     while (*buf != '\0' && isdigit(*buf)) {
         buf++;
     }
