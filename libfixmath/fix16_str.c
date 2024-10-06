@@ -96,6 +96,8 @@ fix16_t strtofix16(const char *buf, char **end, int parse_mask)
     // doing stuff like scientific notation
     // downconvert to 16:16 at the end
 
+    const char *start = buf;
+
     while (isspace(*buf))
         buf++;
     
@@ -105,20 +107,13 @@ fix16_t strtofix16(const char *buf, char **end, int parse_mask)
         buf++;
 
     /* Decode the integer part */
-    int count = 0;
+    int digit_count = 0;
     uint32_t intpart = 0;
     while (isdigit(*buf))
     {
         intpart *= 10;
         intpart += *buf++ - '0';
-        ++count;
-    }
-
-    if (count == 0) {
-        if (end != nullptr) {
-            *end = const_cast<char*>(buf);
-        }
-        return 0;
+        ++digit_count;
     }
     
     uint64_t value = uint64_t(intpart) << 32;
@@ -134,10 +129,29 @@ fix16_t strtofix16(const char *buf, char **end, int parse_mask)
             scale *= 10;
             fracpart *= 10;
             fracpart += *buf++ - '0';
+            ++digit_count;
         }
         value += (uint64_t(fracpart) << 32) / scale;
     }
 
+    // a single dot is not a proper number
+    // it needs to be either e.g. `6.` or `.4` to be valid
+    if (digit_count == 0) {
+        if (end != nullptr) {
+            *end = const_cast<char*>(start);
+        }
+        return 0;
+    }
+
+    // keep parsing extra unnecessary precision digits
+    // stop whenever anything else is encountered
+    while (*buf != '\0' && isdigit(*buf)) {
+        buf++;
+    }
+
+    // non-digit character encountered
+    // is it the exponent part of the number? e.g. 1.23e-6
+    // check if the the caller wants us to parse it?
     if ((parse_mask & LPARSE_ALLOW_EXPONENT) != 0 && *buf == 'e') {
         buf++;
         bool negative_exponent = (*buf == '-');
@@ -166,12 +180,7 @@ fix16_t strtofix16(const char *buf, char **end, int parse_mask)
         }
     }
 
-    // keep parsing extra unnecessary precision digits
-    // stop whenever anything else is encountered
-    while (*buf != '\0' && isdigit(*buf)) {
-        buf++;
-    }
-
+    // update end position
     if (end != nullptr) {
         *end = const_cast<char*>(buf);
     }
