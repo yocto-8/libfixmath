@@ -1,7 +1,0 @@
-language: c
-dist: focal
-
-script:
-    - pushd unittests && make && popd
-
-
