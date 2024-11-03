@@ -1,4 +1,4 @@
-#include "fix16.h"
+#include "fix16.hpp"
 
 #include <math.h>
 

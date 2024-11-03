@@ -1,6 +1,6 @@
 #include <cmath>
 #include <limits.h>
-#include "fix16.h"
+#include "fix16.hpp"
 
 #if defined(FIXMATH_SIN_LUT)
 #include "fix16_trig_sin_lut.h"
