@@ -1,6 +1,6 @@
 #include "fix16.hpp"
 #include <stdbool.h>
-#include <lobject.h>
+#include <lobject.hpp>
 #ifndef FIXMATH_NO_CTYPE
 #include <ctype.h>
 #else
